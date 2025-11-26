@@ -11,6 +11,8 @@
 
 A Burp Suite extension that renders JavaScript-heavy pages using Chrome DevTools Protocol to capture the final DOM state.
 
+![reDOM vs Native Burp Response](static/comparison.png)
+
 ## Features
 
 - Captures fully-rendered DOM after JavaScript execution
