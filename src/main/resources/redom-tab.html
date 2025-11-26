@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>reDOM - Burp Extension</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            color: white;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        h1 {
+            margin: 0 0 20px 0;
+            font-size: 48px;
+            font-weight: 700;
+        }
+        p {
+            margin: 10px 0;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .warning {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <h1>🔧 reDOM</h1>
+        <p>This window is managed by the reDOM Burp Suite extension.</p>
+        <p>It's used for rendering and inspecting DOM content.</p>
+        <div class='warning'>
+            <strong>⚠️ Please do not close this window</strong><br>
+            Closing this window will interrupt the extension's functionality.<br>
+            It will automatically reconnect if needed.
+        </div>
+    </div>
+</body>
+</html>
