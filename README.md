@@ -16,6 +16,7 @@ A Burp Suite extension that renders JavaScript-heavy pages using Chrome DevTools
 ## Features
 
 - Captures fully-rendered DOM after JavaScript execution
+- Analyzes Single Page Applications (SPAs) built with React, Vue.js, Angular, etc.
 - Integrates as a custom response tab in Burp Repeater
 - Auto-render option for automatic DOM capture
 - Configurable Chrome connection and rendering parameters
