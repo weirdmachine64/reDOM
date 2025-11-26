@@ -9,7 +9,7 @@
   ╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝ ╚═╝     ╚═╝
 ```
 
-A Burp Suite extension that renders JavaScript-heavy pages using Chrome DevTools Protocol to capture the final DOM state.
+A Burp Suite extension that brings full DOM rendering capabilities directly into Burp, enabling effective security testing of modern JavaScript-heavy applications built with frameworks like ReactJS, VueJS, Angular, and more.
 
 ![reDOM vs Native Burp Response](static/comparison.png)
 
