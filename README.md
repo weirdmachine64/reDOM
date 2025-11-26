@@ -1,5 +1,14 @@
 # reDOM
 
+```
+  ██████╗ ███████╗██████╗  ██████╗ ███╗   ███╗
+  ██╔══██╗██╔════╝██╔══██╗██╔═══██╗████╗ ████║
+  ██████╔╝█████╗  ██║  ██║██║   ██║██╔████╔██║
+  ██╔══██╗██╔══╝  ██║  ██║██║   ██║██║╚██╔╝██║
+  ██║  ██║███████╗██████╔╝╚██████╔╝██║ ╚═╝ ██║
+  ╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+```
+
 A Burp Suite extension that renders JavaScript-heavy pages using Chrome DevTools Protocol to capture the final DOM state.
 
 ## Features
