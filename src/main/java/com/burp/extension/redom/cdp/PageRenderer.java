@@ -27,11 +27,11 @@ public class PageRenderer {
         private final String renderedHtml;
         private final int statusCode;
         private final String reasonPhrase;
-        private final java.net.http.HttpHeaders headers;
+        private final java.util.List<burp.api.montoya.http.message.HttpHeader> headers;
         private final URI finalUri;
         
         public ResponseData(String renderedHtml, int statusCode, String reasonPhrase, 
-                          java.net.http.HttpHeaders headers, URI finalUri) {
+                          java.util.List<burp.api.montoya.http.message.HttpHeader> headers, URI finalUri) {
             this.renderedHtml = renderedHtml;
             this.statusCode = statusCode;
             this.reasonPhrase = reasonPhrase;
@@ -51,7 +51,7 @@ public class PageRenderer {
             return reasonPhrase;
         }
         
-        public java.net.http.HttpHeaders getHeaders() {
+        public java.util.List<burp.api.montoya.http.message.HttpHeader> getHeaders() {
             return headers;
         }
         
@@ -179,7 +179,7 @@ public class PageRenderer {
                 response.bodyToString(),
                 response.statusCode(),
                 response.reasonPhrase(),
-                convertBurpHeaders(response),
+                new java.util.ArrayList<>(response.headers()),
                 URI.create(url)
             );
         }
@@ -199,7 +199,7 @@ public class PageRenderer {
                 response.bodyToString(),
                 response.statusCode(),
                 response.reasonPhrase(),
-                convertBurpHeaders(response),
+                new java.util.ArrayList<>(response.headers()),
                 URI.create(url)
             );
         }
@@ -238,7 +238,7 @@ public class PageRenderer {
             renderedHtml,
             response.statusCode(),
             response.reasonPhrase(),
-            convertBurpHeaders(response),
+            new java.util.ArrayList<>(response.headers()),
             URI.create(url)
         );
     }
@@ -258,24 +258,4 @@ public class PageRenderer {
         return html;
     }
     
-    /**
-     * Convert Burp headers to Java HttpHeaders format.
-     * Uses LinkedHashMap to preserve original header order from Burp.
-     * 
-     * @param response Burp HTTP response
-     * @return Java HttpHeaders object
-     */
-    private java.net.http.HttpHeaders convertBurpHeaders(burp.api.montoya.http.message.responses.HttpResponse response) {
-        // Use LinkedHashMap to preserve insertion order (header order from Burp)
-        int headerCount = response.headers().size();
-        java.util.Map<String, java.util.List<String>> headerMap = new java.util.LinkedHashMap<>(headerCount);
-        
-        response.headers().forEach(header -> {
-            String name = header.name();
-            String value = header.value();
-            headerMap.computeIfAbsent(name, k -> new java.util.ArrayList<>()).add(value);
-        });
-        
-        return java.net.http.HttpHeaders.of(headerMap, (k, v) -> true);
-    }
 }

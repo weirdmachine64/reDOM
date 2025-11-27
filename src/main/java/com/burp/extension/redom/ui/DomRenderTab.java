@@ -139,17 +139,17 @@ public class DomRenderTab implements ExtensionProvidedHttpResponseEditor {
                                  .append("\r\n");
                     
                     // Add all response headers except Content-Length and HTTP/2 pseudo-headers
-                    responseData.getHeaders().map().forEach((name, values) -> {
+                    for (burp.api.montoya.http.message.HttpHeader header : responseData.getHeaders()) {
+                        String name = header.name();
+                        String value = header.value();
                         // Skip Content-Length (we'll recalculate it) and HTTP/2 pseudo-headers (start with :)
                         if (!"content-length".equalsIgnoreCase(name) && !name.startsWith(":")) {
-                            for (String value : values) {
-                                responseBuilder.append(name)
-                                             .append(": ")
-                                             .append(value)
-                                             .append("\r\n");
-                            }
+                            responseBuilder.append(name)
+                                         .append(": ")
+                                         .append(value)
+                                         .append("\r\n");
                         }
-                    });
+                    }
                     
                     // Add updated Content-Length (calculate using UTF-8 encoding)
                     byte[] htmlBytes = renderedHtml.getBytes(StandardCharsets.UTF_8);
