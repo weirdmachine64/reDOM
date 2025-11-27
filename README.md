@@ -58,7 +58,7 @@ Available settings:
 - **Page Load Timeout**: Maximum time to wait for page load (default: 30)
 - **Render Delay**: Additional wait time after page load in ms (default: 1000)
 - **Auto Render**: Automatically render when tab opens
-- **Minimize Window**: Minimize Chrome window during rendering
+- **Minimized Window**: Start the Chrome rendering window minimized
 
 ## License
 

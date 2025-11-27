@@ -1,0 +1,70 @@
+<p>reDOM is a Burp Suite extension that renders JavaScript-heavy pages using Chrome DevTools Protocol to capture the final DOM state after JavaScript execution.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Captures fully-rendered DOM after JavaScript execution</li>
+<li>Analyzes Single Page Applications (SPAs) built with React, Vue.js, Angular, etc. that Burp can't handle natively</li>
+<li>Integrates as a custom response tab in Burp Repeater</li>
+<li>Auto-render option for automatic DOM capture</li>
+<li>Configurable Chrome connection and rendering parameters</li>
+</ul>
+
+<h2>Requirements</h2>
+
+<ul>
+<li>Burp Suite Professional or Community Edition</li>
+<li>Chrome/Chromium browser</li>
+</ul>
+
+<h2>Setup</h2>
+
+<ol>
+<li>Start Chrome with remote debugging enabled:
+<pre>google-chrome --remote-debugging-port=9222 --headless</pre>
+or
+<pre>chromium -proxy-server=localhost:8080 --remote-debugging-port=9222 --user-data-dir=/tmp/redom --ignore-certificate-errors</pre>
+</li>
+<li>In Burp Suite, navigate to the reDOM Settings tab</li>
+<li>Click "Connect to Chrome"</li>
+<li>The extension will spawn a minimized browser window for rendering operations
+<ul><li><strong>Important:</strong> Do not close this window - it's used for all rendering operations</li></ul>
+</li>
+</ol>
+
+<h2>Usage</h2>
+
+<ol>
+<li>Send a request to Burp Repeater</li>
+<li>Switch to the "DOM Render" tab in the response area</li>
+<li>Either:
+<ul>
+<li>Click "Render in Browser" to manually capture DOM content</li>
+<li>Enable "Auto render" to automatically render when the tab opens</li>
+</ul>
+</li>
+</ol>
+
+<h2>Configuration</h2>
+
+<p>The extension provides the following configurable settings:</p>
+
+<ul>
+<li><strong>Chrome Host/Port:</strong> Connection details for Chrome DevTools Protocol (default: localhost:9222)</li>
+<li><strong>CDP Command Timeout:</strong> Maximum time to wait for WebSocket commands in seconds (default: 30)</li>
+<li><strong>Page Load Timeout:</strong> Maximum time to wait for page load completion in seconds (default: 30)</li>
+<li><strong>Render Delay:</strong> Additional wait time after page load before capturing DOM in milliseconds (default: 1000)</li>
+<li><strong>Auto Render:</strong> Automatically render pages when the DOM Render tab opens</li>
+<li><strong>Minimized Window:</strong> Start the Chrome rendering window minimized</li>
+</ul>
+
+<h2>Use Cases</h2>
+
+<ul>
+<li>Analyzing React, Vue.js, Angular, and other SPA applications</li>
+<li>Testing JavaScript-heavy applications where traditional Burp responses show incomplete HTML</li>
+<li>Capturing dynamically generated content after client-side rendering</li>
+<li>Understanding the final DOM state for security testing</li>
+</ul>
+
+<p>Copyright &copy; 2025</p>

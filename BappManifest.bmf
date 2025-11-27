@@ -1,0 +1,11 @@
+Uuid: 7e9a2f1b8c4d5e6f3a7b9c1d2e4f5a6b
+ExtensionType: 1
+Name: reDOM
+ScreenVersion: 1.0
+SerialVersion: 1
+MinPlatformVersion: 0
+ProOnly: False
+Author: Mohamed Benchikh
+ShortDescription: Renders JavaScript-heavy pages using Chrome DevTools Protocol to capture the final DOM state.
+EntryPoint: target/reDOM.jar
+RepoName: reDOM
