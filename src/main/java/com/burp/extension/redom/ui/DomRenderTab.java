@@ -16,7 +16,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Custom tab that displays HTML content after DOM rendering using Burp's built-in HTTP response editor.
@@ -127,42 +126,9 @@ public class DomRenderTab implements ExtensionProvidedHttpResponseEditor {
                     PageRenderer.ResponseData responseData = get();
                     renderedHtml = responseData.getRenderedHtml();
                     
-                    // Build response using actual HTTP response headers and status
-                    StringBuilder responseBuilder = new StringBuilder();
-                    
-                    // Add status line (HTTP version and status code)
-                    responseBuilder.append("HTTP/1.1")
-                                 .append(" ")
-                                 .append(responseData.getStatusCode())
-                                 .append(" ")
-                                 .append(responseData.getReasonPhrase())
-                                 .append("\r\n");
-                    
-                    // Add all response headers except Content-Length and HTTP/2 pseudo-headers
-                    for (burp.api.montoya.http.message.HttpHeader header : responseData.getHeaders()) {
-                        String name = header.name();
-                        String value = header.value();
-                        // Skip Content-Length (we'll recalculate it) and HTTP/2 pseudo-headers (start with :)
-                        if (!"content-length".equalsIgnoreCase(name) && !name.startsWith(":")) {
-                            responseBuilder.append(name)
-                                         .append(": ")
-                                         .append(value)
-                                         .append("\r\n");
-                        }
-                    }
-                    
-                    // Add updated Content-Length (calculate using UTF-8 encoding)
-                    byte[] htmlBytes = renderedHtml.getBytes(StandardCharsets.UTF_8);
-                    responseBuilder.append("Content-Length: ")
-                                 .append(htmlBytes.length).append("\r\n");
-                                 
-                    responseBuilder.append("\r\n\r\n");
-                    // Add rendered HTML body
-                    responseBuilder.append(renderedHtml);
-                    
-                    // Convert to HttpResponse using UTF-8 encoding
-                    byte[] responseBytes = responseBuilder.toString().getBytes(StandardCharsets.UTF_8);
-                    HttpResponse newResponse = HttpResponse.httpResponse(burp.api.montoya.core.ByteArray.byteArray(responseBytes));
+                    // Create new response with rendered HTML body as UTF-8 bytes, preserving original status, headers, and HTTP version
+                    HttpResponse originalResponse = currentRequestResponse.response();
+                    HttpResponse newResponse = originalResponse.withBody(burp.api.montoya.core.ByteArray.byteArray(renderedHtml.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
                     responseEditor.setResponse(newResponse);
                     
                     // Select the appropriate tab based on settings

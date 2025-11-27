@@ -29,14 +29,16 @@ public class PageRenderer {
         private final String reasonPhrase;
         private final java.util.List<burp.api.montoya.http.message.HttpHeader> headers;
         private final URI finalUri;
+        private final String httpVersion;
         
         public ResponseData(String renderedHtml, int statusCode, String reasonPhrase, 
-                          java.util.List<burp.api.montoya.http.message.HttpHeader> headers, URI finalUri) {
+                          java.util.List<burp.api.montoya.http.message.HttpHeader> headers, URI finalUri, String httpVersion) {
             this.renderedHtml = renderedHtml;
             this.statusCode = statusCode;
             this.reasonPhrase = reasonPhrase;
             this.headers = headers;
             this.finalUri = finalUri;
+            this.httpVersion = httpVersion;
         }
         
         public String getRenderedHtml() {
@@ -57,6 +59,10 @@ public class PageRenderer {
         
         public URI getFinalUri() {
             return finalUri;
+        }
+        
+        public String getHttpVersion() {
+            return httpVersion;
         }
     }
     
@@ -180,13 +186,12 @@ public class PageRenderer {
                 response.statusCode(),
                 response.reasonPhrase(),
                 new java.util.ArrayList<>(response.headers()),
-                URI.create(url)
+                URI.create(url),
+                response.httpVersion()
             );
         }
 
-        // If the response is not HTML, don't bother rendering in Chrome —
-        // return the static Burp response as-is. Use the Content-Type header
-        // when present to determine if this is HTML content.
+        // If the response is not HTML, return original body without rendering
         String contentType = "";
         for (burp.api.montoya.http.message.HttpHeader h : response.headers()) {
             if ("Content-Type".equalsIgnoreCase(h.name())) {
@@ -200,7 +205,8 @@ public class PageRenderer {
                 response.statusCode(),
                 response.reasonPhrase(),
                 new java.util.ArrayList<>(response.headers()),
-                URI.create(url)
+                URI.create(url),
+                response.httpVersion()
             );
         }
         
@@ -239,7 +245,8 @@ public class PageRenderer {
             response.statusCode(),
             response.reasonPhrase(),
             new java.util.ArrayList<>(response.headers()),
-            URI.create(url)
+            URI.create(url),
+            response.httpVersion()
         );
     }
     
