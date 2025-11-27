@@ -183,6 +183,26 @@ public class PageRenderer {
                 URI.create(url)
             );
         }
+
+        // If the response is not HTML, don't bother rendering in Chrome —
+        // return the static Burp response as-is. Use the Content-Type header
+        // when present to determine if this is HTML content.
+        String contentType = "";
+        for (burp.api.montoya.http.message.HttpHeader h : response.headers()) {
+            if ("Content-Type".equalsIgnoreCase(h.name())) {
+                contentType = h.value();
+                break;
+            }
+        }
+        if (contentType != null && !contentType.isEmpty() && !contentType.toLowerCase().contains("html")) {
+            return new ResponseData(
+                response.bodyToString(),
+                response.statusCode(),
+                response.reasonPhrase(),
+                convertBurpHeaders(response),
+                URI.create(url)
+            );
+        }
         
         // Enable network request interception
         cdpClient.enableNetworkInterception();
@@ -240,15 +260,15 @@ public class PageRenderer {
     
     /**
      * Convert Burp headers to Java HttpHeaders format.
-     * Optimized with pre-sized map to reduce allocations.
+     * Uses LinkedHashMap to preserve original header order from Burp.
      * 
      * @param response Burp HTTP response
      * @return Java HttpHeaders object
      */
     private java.net.http.HttpHeaders convertBurpHeaders(burp.api.montoya.http.message.responses.HttpResponse response) {
-        // Pre-size map based on header count for better performance
+        // Use LinkedHashMap to preserve insertion order (header order from Burp)
         int headerCount = response.headers().size();
-        java.util.Map<String, java.util.List<String>> headerMap = new java.util.HashMap<>(headerCount);
+        java.util.Map<String, java.util.List<String>> headerMap = new java.util.LinkedHashMap<>(headerCount);
         
         response.headers().forEach(header -> {
             String name = header.name();
