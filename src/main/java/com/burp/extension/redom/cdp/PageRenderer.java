@@ -1,8 +1,6 @@
 package com.burp.extension.redom.cdp;
 
 import java.net.URI;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Handles page rendering using Chrome DevTools Protocol to inject Burp responses.
@@ -210,36 +208,9 @@ public class PageRenderer {
             );
         }
         
-        // Enable network request interception
-        cdpClient.enableNetworkInterception();
-        
-        // Set up the response override for this URL using the Burp response
-        cdpClient.setResponseOverride(url, response);
-        
-        // Navigate to the URL - Chrome will request it, we'll intercept and override
-        CompletableFuture<Void> loadComplete = cdpClient.navigateAndWaitForLoad(url);
-        
-        try {
-            loadComplete.get(pageLoadTimeoutSeconds, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            api.logging().logToError("Page load timeout for " + url + " after " + pageLoadTimeoutSeconds + "s: " + e.getMessage());
-        }
-        
-        // Wait for JavaScript execution (configurable delay to allow dynamic content to render)
-        try {
-            TimeUnit.MILLISECONDS.sleep(renderDelayMs);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            api.logging().logToError("Render delay interrupted for " + url);
-        }
-        
-        // Get the rendered HTML
-        String renderedHtml = cdpClient.getDocumentHTML();
-        renderedHtml = trimLeadingNewlines(renderedHtml);
-        
-        // Clean up
-        cdpClient.disableNetworkInterception();
-        
+        String renderedHtml = trimLeadingNewlines(
+            cdpClient.renderPage(url, response, pageLoadTimeoutSeconds, renderDelayMs));
+
         return new ResponseData(
             renderedHtml,
             response.statusCode(),
