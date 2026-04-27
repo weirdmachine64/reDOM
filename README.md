@@ -18,8 +18,8 @@ A Burp Suite extension that brings full DOM rendering capabilities directly into
 - Captures fully-rendered DOM after JavaScript execution
 - Analyzes Single Page Applications (SPAs) built with React, Vue.js, Angular, etc.
 - Integrates as a custom response tab in Burp Repeater
-- Auto-render option for automatic DOM capture
-- Configurable Chrome connection and rendering parameters
+- Launches and manages the browser directly from the extension
+- Configurable rendering and connection parameters
 
 ## Requirements
 
@@ -37,28 +37,29 @@ A Burp Suite extension that brings full DOM rendering capabilities directly into
 
 ## Usage
 
-1. Start a Chromium based browser with remote debugging:
-   ```bash
-   chromium -proxy-server=localhost:8080 --remote-debugging-port=9222 --user-data-dir=/tmp/redom --ignore-certificate-errors
-   ```
+1. Load the extension — the settings panel opens automatically
 
-2. In Burp, go to reDOM settings tab and click "Connect to Chrome"
+2. Configure browser path, upstream proxy, and profile directory as needed
 
-3. The extension will spawn a minimized browser window for rendering
+3. Click **Launch & Connect** to start the browser and connect
 
-4. Send a request to Repeater and switch to the "DOM Render" tab
-
-5. Click "Render in Browser" or enable "Auto render" for automatic rendering
+4. Send a request to Repeater and switch to the **DOM Render** tab
 
 ## Configuration
 
-Available settings:
-- **Chrome Host/Port**: Connection details (default: localhost:9222)
-- **CDP Command Timeout**: WebSocket command timeout in seconds (default: 30)
-- **Page Load Timeout**: Maximum time to wait for page load (default: 30)
-- **Render Delay**: Additional wait time after page load in ms (default: 1000)
-- **Auto Render**: Automatically render when tab opens
-- **Minimized Window**: Start the Chrome rendering window minimized
+| Setting | Description | Default |
+|---|---|---|
+| Browser path | Path to the Chromium executable | `chromium` |
+| Upstream proxy | Burp proxy address | `localhost:8080` |
+| Profile directory | Browser profile to use | `/tmp/redom` |
+| Accept invalid certificates | Trust self-signed and invalid TLS certs | on |
+| Launch browser on startup | Automatically launch browser when extension loads | off |
+| Host / Port | Remote debugging address | `localhost:9222` |
+| Command timeout | CDP command timeout | `30s` |
+| Post-load delay | Wait time after page load for JS to settle | `1000ms` |
+| Load timeout | Maximum time to wait for page load | `30s` |
+| Render on tab selection | Render automatically when the DOM Render tab is opened | on |
+| Pretty-print HTML | Format the rendered HTML output | on |
 
 ## License
 
