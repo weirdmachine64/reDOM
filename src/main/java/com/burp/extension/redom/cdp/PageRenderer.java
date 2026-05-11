@@ -1,66 +1,33 @@
 package com.burp.extension.redom.cdp;
 
-import java.net.URI;
-
 /**
  * Handles page rendering using Chrome DevTools Protocol to inject Burp responses.
- * 
+ *
  * This class orchestrates:
  * - Network interception to override responses with Burp data
  * - Page navigation and JavaScript execution wait time
  * - DOM extraction after rendering completes
- * 
+ *
  * Performance: Uses configurable JavaScript execution wait time (default 1000ms)
  * to balance between page load completion and rendering speed.
  */
 public class PageRenderer {
-    
+
     private static final int DEFAULT_PAGE_LOAD_TIMEOUT_SECONDS = 30;
     private static final int DEFAULT_RENDER_DELAY_MS = 1000; // Wait time after page load for JavaScript rendering
-    
+
     /**
-     * Response data containing rendered HTML and HTTP response metadata.
+     * Response data containing rendered HTML.
      */
     public static class ResponseData {
         private final String renderedHtml;
-        private final int statusCode;
-        private final String reasonPhrase;
-        private final java.util.List<burp.api.montoya.http.message.HttpHeader> headers;
-        private final URI finalUri;
-        private final String httpVersion;
-        
-        public ResponseData(String renderedHtml, int statusCode, String reasonPhrase, 
-                          java.util.List<burp.api.montoya.http.message.HttpHeader> headers, URI finalUri, String httpVersion) {
+
+        public ResponseData(String renderedHtml) {
             this.renderedHtml = renderedHtml;
-            this.statusCode = statusCode;
-            this.reasonPhrase = reasonPhrase;
-            this.headers = headers;
-            this.finalUri = finalUri;
-            this.httpVersion = httpVersion;
         }
-        
+
         public String getRenderedHtml() {
             return renderedHtml;
-        }
-        
-        public int getStatusCode() {
-            return statusCode;
-        }
-        
-        public String getReasonPhrase() {
-            return reasonPhrase;
-        }
-        
-        public java.util.List<burp.api.montoya.http.message.HttpHeader> getHeaders() {
-            return headers;
-        }
-        
-        public URI getFinalUri() {
-            return finalUri;
-        }
-        
-        public String getHttpVersion() {
-            return httpVersion;
         }
     }
     
@@ -179,14 +146,7 @@ public class PageRenderer {
         
         // If redirect is detected, return early without rendering
         if (isRedirect) {
-            return new ResponseData(
-                response.bodyToString(),
-                response.statusCode(),
-                response.reasonPhrase(),
-                new java.util.ArrayList<>(response.headers()),
-                URI.create(url),
-                response.httpVersion()
-            );
+            return new ResponseData(response.bodyToString());
         }
 
         // If the response is not HTML, return original body without rendering
@@ -198,27 +158,13 @@ public class PageRenderer {
             }
         }
         if (contentType != null && !contentType.isEmpty() && !contentType.toLowerCase().contains("html")) {
-            return new ResponseData(
-                response.bodyToString(),
-                response.statusCode(),
-                response.reasonPhrase(),
-                new java.util.ArrayList<>(response.headers()),
-                URI.create(url),
-                response.httpVersion()
-            );
+            return new ResponseData(response.bodyToString());
         }
-        
+
         String renderedHtml = trimLeadingNewlines(
             cdpClient.renderPage(url, response, pageLoadTimeoutSeconds, renderDelayMs));
 
-        return new ResponseData(
-            renderedHtml,
-            response.statusCode(),
-            response.reasonPhrase(),
-            new java.util.ArrayList<>(response.headers()),
-            URI.create(url),
-            response.httpVersion()
-        );
+        return new ResponseData(renderedHtml);
     }
     
     // ==================== Utility Methods ====================
